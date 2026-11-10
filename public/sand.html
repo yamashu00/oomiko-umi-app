@@ -140,11 +140,11 @@ input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);bord
     <p class="q">地上で描いている本人には、全体の形が見えているのかな？</p>
     <p class="q">フリーハンドでは、きれいな円や星を巨大に描くのは難しい。どうすれば正確に描ける？</p>
     <p class="hint">→ 今日は<b>数学</b>で描く。角度と半径から、杭を打つ位置を計算する。まずは角度の新しい測り方から。</p>
-    <div class="notice"><b>杭やロープは用意していません。自分たちで工夫してください。</b><br>例：流木や棒を杭のかわりにする、石や貝を並べて目印にする、ひもやタオルをつなぐ、歩幅で長さを測る、棒で砂に線を引く など。</div>
+    <div class="notice"><b>各班に 2m のひもを2本配ります。杭や目印は用意していないので、自分たちで工夫してください。</b><br>例：流木や棒を杭のかわりにする、石や貝を並べて目印にする、棒や指で砂に線を引く、長い線は歩幅で測る など。</div>
     <h2>今日の流れ（70分）</h2>
     <dl class="flow">
       <dt>0–5分</dt><dd>はじめに（このページ）</dd>
-      <dt>5–20分</dt><dd>1 ラジアン：ロープで角を測る</dd>
+      <dt>5–20分</dt><dd>1 ラジアン：ひもで角を測る</dd>
       <dt>20–30分</dt><dd>2 設計する・3 杭を計算</dd>
       <dt>30–50分</dt><dd>浜に杭を打って描く</dd>
       <dt>50–62分</dt><dd>4 高い所から撮って比べる</dd>
@@ -166,12 +166,14 @@ input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);bord
       <p class="q">円そのものを使って、角を測る方法はないかな？</p>
     </div>
 
-    <h2>② やってみよう：ロープで測る（班で）</h2>
-    <div class="notice"><b>杭やロープは用意していません。自分たちで工夫してください。</b><br>例：流木や棒を杭のかわりにする、石や貝を並べて目印にする、ひもやタオルをつなぐ、歩幅で長さを測る、棒で砂に線を引く など。</div>
+    <h2>② やってみよう：ひもで測る（班で）</h2>
+    <div class="notice"><b>各班に 2m のひもを2本配ります。杭や目印は用意していないので、自分たちで工夫してください。</b><br>例：流木や棒を杭のかわりにする、石や貝を並べて目印にする、棒や指で砂に線を引く、長い線は歩幅で測る など。</div>
 
     <ol class="steps">
-      <li>中心に杭を打ち、半径 R のロープ（例：3m）をピンと張って、ぐるっと<b>円</b>を描く</li>
-      <li>同じ長さのロープを、<b>円周に沿わせて</b>曲げながら置き、半径1本分ずつ杭を打っていく（上の図の 0 → 1 → 2 …）</li>
+      <li><b>ひも①（2m）</b>の片方の端を中心に固定する（流木や棒を立てる、1人が押さえる など）。ひもをピンと張ったまま一周して、砂に<b>円</b>を描く（コンパスと同じ）</li>
+      <li>ひも①は、<b>半径</b>として中心から0番の目印までまっすぐ置いておく</li>
+      <li><b>ひも②（2m）</b>を、0番の目印から<b>円周に沿わせて曲げながら</b>置き、ひもの終わりに1番の目印を置く</li>
+      <li>ひも②をずらして、1番 → 2番 → … と半径1本分ずつ目印を置いていく（上の図の 0 → 1 → 2 …）</li>
       <li>1周するまでに、半径は何本ならんだ？ 予想してから数えよう</li>
     </ol>
     <div class="quiz">
@@ -182,7 +184,7 @@ input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);bord
       <h3>なぜ 2π本？</h3>
       <p>中学で習った「円周 ＝ 2π × 半径」を思い出そう。円周の長さ 2πR を、半径 R で割ると</p>
       <p class="ans">2πR ÷ R ＝ 2π（≒ 6.28）</p>
-      <p>だから、1周には半径が <b>2π本</b> ならぶ。6本ならべても 0.28本分（R が3mなら約0.85m）あまる。</p>
+      <p>だから、1周には半径が <b>2π本</b> ならぶ。6本ならべても 0.28本分（半径 2m なら約 57cm）あまる。</p>
     </div>
 
     <h2>③ 1ラジアンとは</h2>
@@ -195,7 +197,7 @@ input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);bord
 
     <h2>④ 円の大きさを変えても同じ？</h2>
     <div class="card">
-      <p>半径 3m の円でも 10m の円でも、1ラジアンの角は同じ大きさ。</p>
+      <p>半径 2m の円でも 10m の円でも、1ラジアンの角は同じ大きさ。</p>
       <p>円を2倍に大きくすると、弧の長さも半径も<b>どちらも2倍</b>になる。だから「弧 ÷ 半径」の値は変わらない。下のスライダーで R を変えて、図の角が変わらないことを確かめよう。</p>
       <div id="radctl"></div>
     </div>
@@ -250,7 +252,7 @@ input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);bord
       <span>π/4 ＝ 何度？</span><button class="btn ghost" data-reveal="r6">答え</button>
       <span class="ans" id="r6" hidden>45°（180° ÷ 4）</span>
       <span>半径 3m、中心角 π/3 の弧の長さは？</span><button class="btn ghost" data-reveal="r7">答え</button>
-      <span class="ans" id="r7" hidden>3 × π/3 ＝ π ≒ 3.14 m</span>
+      <span class="ans" id="r7" hidden>3 × π/3 ＝ π ≒ 3.14 m（今日の 2m のひもなら 2 × π/3 ≒ 2.09 m）</span>
       <span>星の杭を7本打つと、となりの杭との角は何ラジアン？</span><button class="btn ghost" data-reveal="r4">答え</button>
       <span class="ans" id="r4" hidden>2π/7（360° ÷ 7 ≒ 51.4°）</span>
     </div>
@@ -331,21 +333,21 @@ function piFrac(deg){ // 度をπの分数で(きれいな時だけ)
   const top=(a===1?"":a===-1?"-":a)+"π"; return b===1?top:top+"/"+b;
 }
 const SHAPES={
-  star:{name:"星(n角形をk飛び)",circle:1,p:{R:[4,1,10,0.5,"半径 R","m"],n:[7,3,16,1,"杭の数 n","本"],k:[3,1,7,1,"飛ばす数 k","つ"]}},
-  rose:{name:"花(バラ曲線)",circle:1,p:{R:[4,1,10,0.5,"花の大きさ R","m"],k:[3,2,7,1,"花びら k","枚系"],s:[15,5,30,5,"角度のきざみ","°"]}},
+  star:{name:"星(n角形をk飛び)",circle:1,p:{R:[2,1,10,0.5,"半径 R","m"],n:[7,3,16,1,"杭の数 n","本"],k:[3,1,7,1,"飛ばす数 k","つ"]}},
+  rose:{name:"花(バラ曲線)",circle:1,p:{R:[2,1,10,0.5,"花の大きさ R","m"],k:[3,2,7,1,"花びら k","枚系"],s:[15,5,30,5,"角度のきざみ","°"]}},
   spiral:{name:"らせん",p:{a:[0.5,0,3,0.5,"最初の半径","m"],g:[1.5,0.5,4,0.5,"1周で広がる","m"],t:[3,1,5,0.5,"回る数","周"],s:[30,15,60,15,"角度のきざみ","°"]}},
-  polygon:{name:"正多角形",circle:1,p:{R:[4,1,10,0.5,"半径 R","m"],n:[6,3,12,1,"頂点の数 n","個"]}},
-  sun:{name:"太陽(放射線)",circle:1,p:{R:[4,1,10,0.5,"半径 R","m"],n:[12,4,24,1,"光の数 n","本"]}},
-  ring:{name:"波の輪",circle:1,p:{R:[4,1,10,0.5,"半径 R","m"],a:[0.8,0.2,2,0.1,"波の高さ a","m"],k:[6,2,12,1,"波の数 k","個"],s:[15,5,30,5,"角度のきざみ","°"]}},
-  custom:{name:"オリジナル",circle:1,p:{R:[4,1,10,0.5,"円の半径 R(目安)","m"]}},
-  radian:{name:"1ラジアンの弧",p:{R:[4,1,10,0.5,"半径 R(=ロープ)","m"]}},
+  polygon:{name:"正多角形",circle:1,p:{R:[2,1,10,0.5,"半径 R","m"],n:[6,3,12,1,"頂点の数 n","個"]}},
+  sun:{name:"太陽(放射線)",circle:1,p:{R:[2,1,10,0.5,"半径 R","m"],n:[12,4,24,1,"光の数 n","本"]}},
+  ring:{name:"波の輪",circle:1,p:{R:[2,1,10,0.5,"半径 R","m"],a:[0.8,0.2,2,0.1,"波の高さ a","m"],k:[6,2,12,1,"波の数 k","個"],s:[15,5,30,5,"角度のきざみ","°"]}},
+  custom:{name:"オリジナル",circle:1,p:{R:[2,1,10,0.5,"円の半径 R(目安)","m"]}},
+  radian:{name:"1ラジアンの弧",p:{R:[2,1,10,0.5,"半径 R(=ロープ)","m"]}},
   wave:{name:"sin の波",p:{A:[2,0.5,4,0.5,"振幅 A","m"],L:[8,4,16,1,"波長 L","m"],c:[2,1,3,1,"波の数","個"],s:[30,15,45,15,"角度のきざみ","°"]}},
 };
 let state={shape:"star",v:{}}, tab="design", hide=true, revealed=new Set();
 let photo=null, ph={w:12,rot:0,dx:0,dy:0,op:60}, tapping=false, taps=[];
 for(const k in SHAPES){state.v[k]={};for(const p in SHAPES[k].p)state.v[k][p]=SHAPES[k].p[p][0];}
 try{const s=JSON.parse(localStorage.getItem("sunae-current")||"null");if(s&&SHAPES[s.shape]){const def=state.v;state=Object.assign(state,s);for(const k in def)state.v[k]=Object.assign({},def[k],state.v[k]||{});}}catch(e){}
-if(!state.v.custom.text)state.v.custom.text="0 4\n72 4\n144 4\n216 4\n288 4\n0 4";
+if(!state.v.custom.text)state.v.custom.text="0 2\n72 2\n144 2\n216 2\n288 2\n0 2";
 
 function build(){
   const v=state.v[state.shape]; let pts=[],segs=[],closed=false,formula="",extra=null,circle=null,cols;
