@@ -176,6 +176,14 @@ input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);bord
       <li>ひも②をずらして、1番 → 2番 → … と半径1本分ずつ目印を置いていく（上の図の 0 → 1 → 2 …）</li>
       <li>1周するまでに、半径は何本ならんだ？ 予想してから数えよう</li>
     </ol>
+    <div class="card">
+      <h3>うまくいかないとき：代わりの方法</h3>
+      <p><b>A ひも1本だけで</b>：ひも①で円を描いたあと、同じひもを円周に沿わせて動かし、半径1本分ずつ目印を置く。</p>
+      <p><b>B 歩幅で</b>：中心から円周までを歩いて歩数を数える（例：3歩）。円周の上を同じ歩数ずつ歩いて目印を置く。精度は下がるが、「6回と少し」は確かめられる。</p>
+      <p><b>C 足の長さで</b>：かかととつま先をくっつけて歩き、半径が足何個分かを数える（例：8足）。円周の上も同じ足の数ずつ進む。歩幅より正確。</p>
+      <p><b>D 小さな円で</b>：砂浜が使いにくいときは、砂の上に指や棒で半径30cmくらいの小さな円を描き、靴ひもや腕の長さで同じことをする。</p>
+      <p class="hint">どの方法でも「半径何本分で1周するか」を数えれば同じ答え（2π本 ≒ 6.28本）になるはず。ずれたら、どこで誤差が出たか考えよう。</p>
+    </div>
     <div class="quiz">
       <span>半径は何本ならんだ？</span><button class="btn ghost" data-reveal="r1">答え</button>
       <span class="ans" id="r1" hidden>6本と少し。ちょうど 2π本（≒ 6.28本）</span>
@@ -279,6 +287,12 @@ input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);bord
   <section class="panel" id="p-table" hidden>
     <h2>杭の位置を計算する</h2>
     <p class="hint">浜では、中心の杭から <b>x は海に沿って右へ</b>、<b>y は陸のほうへ</b> 巻尺で測ります(マイナスは逆向き)。まず電卓で自分で計算してから、？をタップして答え合わせ。</p>
+    <div class="card">
+      <h3>x・y の長さの測り方</h3>
+      <p><b>ひも①に結び目</b>：50cm ごとに結び目を作ると、2m までのメジャーになる。</p>
+      <p><b>足の長さ</b>：自分の足の長さ（例：25cm）を使い、「1m ＝ 足4個分」のように換算する。</p>
+      <p><b>歩幅</b>：長い距離は歩幅で（10歩の長さを測っておくと、1歩の長さがわかる）。</p>
+    </div>
     <label class="switch"><input type="checkbox" id="hide" checked> 答えをかくす(自分で計算する)</label>
     <div class="tablewrap"><table id="tbl"></table></div>
   </section>
