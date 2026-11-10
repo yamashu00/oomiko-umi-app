@@ -3,6 +3,11 @@
 基礎数学Ⅰ 大神子海岸FW（2026-11-11）用のフィールドワークアプリ。
 授業設計: [../kiso-sugaku-1/fw-2026-11-11-oomiko.md](../kiso-sugaku-1/fw-2026-11-11-oomiko.md)
 
+## 公開URL（GitHub Pages）
+- 海の数学ラボ：https://yamashu00.github.io/oomiko-umi-app/
+- 浜の砂絵ラボ：https://yamashu00.github.io/oomiko-umi-app/sand.html （海の数学ラボのホームからも開ける）
+- 更新手順：`npm run build` → `dist/` の中身を `gh-pages` ブランチに push
+
 ## 方針
 - **電波なしで完結**（岳人の森で回線が落ちた反省）。記録は端末内（localStorage）、提出は CSV 書き出し
 - 一度開けば Service Worker で端末に保存され、圏外でも再読み込みできる
