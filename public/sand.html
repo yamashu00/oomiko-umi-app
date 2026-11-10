@@ -1,0 +1,331 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>浜の砂絵ラボ</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one column phone-first workbench; canvas on top, controls under it, 4-step loop as tabs */
+:root{
+  --sand:#ecebe4; --panel:#f8f8f4; --ink:#1d2b2f; --muted:#5d6b6c; --line:#c9ccc2;
+  --sea:#0f6b73; --rope:#c4532f; --stake:#1d2b2f; --grid:rgba(29,43,47,.08); --photo-tint:rgba(15,107,115,.12);
+  --display:"Dela Gothic One","Hiragino Sans","Noto Sans JP",sans-serif;
+  --body:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --sand:#14191b; --panel:#1c2326; --ink:#e4e8e3; --muted:#9aa7a6; --line:#33403f;
+  --sea:#4fb7bd; --rope:#ec8a63; --stake:#e4e8e3; --grid:rgba(228,232,227,.08); --photo-tint:rgba(79,183,189,.14); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --sand:#14191b; --panel:#1c2326; --ink:#e4e8e3; --muted:#9aa7a6; --line:#33403f;
+  --sea:#4fb7bd; --rope:#ec8a63; --stake:#e4e8e3; --grid:rgba(228,232,227,.08); --photo-tint:rgba(79,183,189,.14); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--sand);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 40px}
+.wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+header h1{font-family:var(--display);font-weight:400;font-size:1.7rem;margin:0;letter-spacing:.02em;text-wrap:balance}
+header p{margin:2px 0 0;color:var(--muted);font-size:.9rem}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tabs button{font:inherit;font-size:.85rem;padding:8px 4px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;cursor:pointer;line-height:1.3}
+.tabs button b{display:block;font-family:var(--mono);font-weight:500;color:var(--muted);font-size:.72rem}
+.tabs button[aria-selected="true"]{background:var(--sea);border-color:var(--sea);color:var(--sand)}
+.tabs button[aria-selected="true"] b{color:var(--sand)}
+.stage{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;position:relative}
+canvas{display:block;width:100%;height:auto;aspect-ratio:1/1;max-width:100%;touch-action:manipulation}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;padding:8px 12px;border-top:1px solid var(--line);font-size:.8rem;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:12px}
+.panel h2{font-size:1rem;margin:0}
+.hint{color:var(--muted);font-size:.85rem;margin:0}
+.shapes{display:flex;flex-wrap:wrap;gap:6px}
+.shapes button{font:inherit;font-size:.88rem;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.shapes button[aria-pressed="true"]{border-color:var(--rope);color:var(--rope);font-weight:700}
+.ctl{display:grid;grid-template-columns:7.5em 1fr 4.8em;align-items:center;gap:8px}
+.ctl label{font-size:.88rem}
+.ctl input[type=range]{width:100%;accent-color:var(--sea)}
+.ctl output{font-family:var(--mono);font-size:.85rem;text-align:right;font-variant-numeric:tabular-nums}
+.formula{font-family:var(--mono);font-size:.85rem;background:var(--sand);border-radius:6px;padding:8px 10px;overflow-x:auto;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stats div{border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+.stats span{display:block;font-size:.75rem;color:var(--muted)}
+.stats strong{font-family:var(--mono);font-weight:500;font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:.82rem;font-variant-numeric:tabular-nums}
+th,td{padding:5px 8px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-family:var(--body);font-weight:700;font-size:.78rem;color:var(--muted);background:var(--sand);position:sticky;top:0}
+td.q button{font:inherit;border:1px dashed var(--line);background:transparent;color:var(--sea);border-radius:4px;padding:0 8px;cursor:pointer}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font:inherit;font-size:.88rem;padding:7px 14px;border-radius:8px;border:1px solid var(--sea);background:var(--sea);color:var(--sand);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--sea)}
+.btn:focus-visible,.tabs button:focus-visible,.shapes button:focus-visible,input:focus-visible{outline:2px solid var(--rope);outline-offset:2px}
+input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--sand);color:var(--ink);min-width:0;flex:1}
+.switch{display:flex;gap:8px;align-items:center;font-size:.88rem}
+.steps{margin:0;padding-left:1.3em;font-size:.9rem}
+.steps li{margin-bottom:4px}
+.big{font-family:var(--display);font-size:1.6rem;font-weight:400}
+.saved{display:flex;flex-direction:column;gap:6px}
+.saved div{display:flex;gap:8px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+.saved div span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:420px){.ctl{grid-template-columns:6.5em 1fr 4.2em}.stats{grid-template-columns:1fr 1fr}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>浜の砂絵ラボ</h1>
+    <p>角度とラジアンで図形を設計し、浜で描いて、写真で確かめる。何度でも行き来してOK。</p>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button role="tab" id="t-design" aria-selected="true"><b>1</b>設計する</button>
+    <button role="tab" id="t-table" aria-selected="false"><b>2</b>杭を計算</button>
+    <button role="tab" id="t-photo" aria-selected="false"><b>3</b>写真で比べる</button>
+    <button role="tab" id="t-save" aria-selected="false"><b>4</b>保存・共有</button>
+  </nav>
+
+  <div class="stage">
+    <canvas id="cv" width="800" height="800" aria-label="砂絵の設計図"></canvas>
+    <div class="legend">
+      <span><i style="background:var(--stake)"></i>杭(番号つき)</span>
+      <span><i style="background:var(--rope)"></i>ロープ・線</span>
+      <span><i style="background:var(--sea)"></i>中心の杭</span>
+      <span id="gridnote">方眼は1m</span>
+    </div>
+  </div>
+
+  <!-- 1 設計 -->
+  <section class="panel" id="p-design">
+    <h2>図形を選ぶ</h2>
+    <div class="shapes" id="shapes"></div>
+    <div id="ctls" style="display:flex;flex-direction:column;gap:10px"></div>
+    <div class="formula" id="formula"></div>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <!-- 2 杭の表 -->
+  <section class="panel" id="p-table" hidden>
+    <h2>杭の位置を計算する</h2>
+    <p class="hint">浜では、中心の杭から <b>x は海に沿って右へ</b>、<b>y は陸のほうへ</b> 巻尺で測ります(マイナスは逆向き)。まず電卓で自分で計算してから、？をタップして答え合わせ。</p>
+    <label class="switch"><input type="checkbox" id="hide" checked> 答えをかくす(自分で計算する)</label>
+    <div class="tablewrap"><table id="tbl"></table></div>
+  </section>
+
+  <!-- 3 写真 -->
+  <section class="panel" id="p-photo" hidden>
+    <h2>描いた砂絵の写真と重ねる</h2>
+    <ol class="steps">
+      <li>高い所から撮った写真を選ぶ(写真はこの端末の中だけで使い、どこにも送られません)</li>
+      <li>スライダーで写真を動かし、中心の杭と0番の杭を設計図にそろえる</li>
+      <li>「杭をタップ」を押し、写真に写った杭を 0番から順にタップ</li>
+    </ol>
+    <div class="row"><input type="file" id="file" accept="image/*"></div>
+    <div id="photoctls" style="display:flex;flex-direction:column;gap:10px"></div>
+    <div class="row">
+      <button class="btn" id="tapmode">杭をタップ</button>
+      <button class="btn ghost" id="undo">1つ戻す</button>
+      <button class="btn ghost" id="cleartaps">タップを消す</button>
+    </div>
+    <div id="err" class="hint"></div>
+  </section>
+
+  <!-- 4 保存 -->
+  <section class="panel" id="p-save" hidden>
+    <h2>保存・共有</h2>
+    <div class="row"><input type="text" id="name" placeholder="作品の名前(例:3班 7つの星)"><button class="btn" id="save">この端末に保存</button></div>
+    <div class="saved" id="saved"></div>
+    <h2>共有コード</h2>
+    <p class="hint">班どうしや先生に、このコードを送ると同じ図形を開けます。</p>
+    <div class="row"><input type="text" id="code" readonly><button class="btn ghost" id="copy">コピー</button></div>
+    <div class="row"><input type="text" id="incode" placeholder="もらったコードを貼る"><button class="btn ghost" id="load">開く</button></div>
+    <div id="msg" class="hint"></div>
+  </section>
+</div>
+
+<script>
+(()=>{
+const D=Math.PI/180, f=(v,d=2)=>(Math.abs(v)<5e-10?0:v).toFixed(d);
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+function piFrac(deg){ // 度をπの分数で(きれいな時だけ)
+  const n=Math.round(deg*12/180); if(Math.abs(n*15-deg)>1e-9) return f(deg*D,3);
+  if(n===0) return "0"; const g=gcd(Math.abs(n),12), a=n/g, b=12/g;
+  const top=(a===1?"":a===-1?"-":a)+"π"; return b===1?top:top+"/"+b;
+}
+const SHAPES={
+  star:{name:"星(n角形をk飛び)",p:{R:[4,1,10,0.5,"半径 R","m"],n:[7,3,16,1,"杭の数 n","本"],k:[3,1,7,1,"飛ばす数 k","つ"]}},
+  rose:{name:"花(バラ曲線)",p:{R:[4,1,10,0.5,"花の大きさ R","m"],k:[3,2,7,1,"花びら k","枚系"],s:[15,5,30,5,"角度のきざみ","°"]}},
+  spiral:{name:"らせん",p:{a:[0.5,0,3,0.5,"最初の半径","m"],g:[1.5,0.5,4,0.5,"1周で広がる","m"],t:[3,1,5,0.5,"回る数","周"],s:[30,15,60,15,"角度のきざみ","°"]}},
+  radian:{name:"1ラジアンの弧",p:{R:[4,1,10,0.5,"半径 R(=ロープ)","m"]}},
+  wave:{name:"sin の波",p:{A:[2,0.5,4,0.5,"振幅 A","m"],L:[8,4,16,1,"波長 L","m"],c:[2,1,3,1,"波の数","個"],s:[30,15,45,15,"角度のきざみ","°"]}},
+};
+let state={shape:"star",v:{}}, tab="design", hide=true, revealed=new Set();
+let photo=null, ph={w:12,rot:0,dx:0,dy:0,op:60}, tapping=false, taps=[];
+for(const k in SHAPES){state.v[k]={};for(const p in SHAPES[k].p)state.v[k][p]=SHAPES[k].p[p][0];}
+try{const s=JSON.parse(localStorage.getItem("sunae-current")||"null");if(s&&SHAPES[s.shape])state=Object.assign(state,s);}catch(e){}
+
+function build(){
+  const v=state.v[state.shape]; let pts=[],segs=[],closed=false,formula="",extra=null,circle=null,cols;
+  if(state.shape==="star"){
+    const n=v.n,k=Math.min(v.k,Math.floor((n-1)/2)||1); v.k=k;
+    for(let i=0;i<n;i++){const d=i*360/n;pts.push({deg:d,r:v.R,x:v.R*Math.cos(d*D),y:v.R*Math.sin(d*D)});segs.push([i,(i+k)%n]);}
+    const chord=2*v.R*Math.sin(180*k/n*D);
+    formula=`θ = 360°÷${n} × 番号 = ${f(360/n,1)}° きざみ<br>x = ${v.R}·cosθ ,  y = ${v.R}·sinθ<br>線1本 = 2R·sin(180°×${k}÷${n}) = ${f(chord)} m`;
+    if(gcd(n,k)>1) formula+=`<br>n と k に公約数 ${gcd(n,k)} があるので、${gcd(n,k)}つの図形に分かれます`;
+    cols="r";
+  }else if(state.shape==="rose"){
+    const k=v.k, maxd=k%2?180:360;
+    for(let d=0;d<maxd-1e-9;d+=v.s){const r=v.R*Math.cos(k*d*D);pts.push({deg:d,r,x:r*Math.cos(d*D),y:r*Math.sin(d*D)});}
+    for(let i=0;i<pts.length;i++)segs.push([i,(i+1)%pts.length]); closed=true;
+    formula=`r = ${v.R}·cos(${k}θ)  (θ は ${v.s}° きざみ、0°〜${maxd}°)<br>x = r·cosθ ,  y = r·sinθ  ← r がマイナスなら反対側へ`;
+    cols="r";
+  }else if(state.shape==="spiral"){
+    const end=v.t*360;
+    for(let d=0;d<=end+1e-9;d+=v.s){const r=v.a+v.g*d/360;pts.push({deg:d,r,x:r*Math.cos(d*D),y:r*Math.sin(d*D)});}
+    for(let i=0;i<pts.length-1;i++)segs.push([i,i+1]);
+    formula=`r = ${v.a} + ${v.g}×(θ÷360°)<br>x = r·cosθ ,  y = r·sinθ  (θ は 360° をこえても OK=一般角)`;
+    cols="r";
+  }else if(state.shape==="radian"){
+    for(let n=0;n<=6;n++){const d=n/D;pts.push({deg:d,rad:n,r:v.R,x:v.R*Math.cos(n),y:v.R*Math.sin(n)});}
+    circle=v.R;
+    formula=`ロープ ${v.R} m を半径にして、円周にも ${v.R} m ずつ測っていく<br>1 rad = 180°÷π ≒ 57.3° ,  6 rad ≒ 343.8°<br>あと ${f(2*Math.PI-6,3)} rad(${f(v.R*(2*Math.PI-6))} m)で1周 → 1周 = 2π rad`;
+    extra="radian"; cols="rad";
+  }else{
+    const total=v.c*360;
+    for(let d=0;d<=total+1e-9;d+=v.s){const x=v.L*d/360-v.L*v.c/2;pts.push({deg:d,x,y:v.A*Math.sin(d*D)});}
+    for(let i=0;i<pts.length-1;i++)segs.push([i,i+1]);
+    formula=`y = ${v.A}·sin(θ) ,  x = ${v.L}×(θ÷360°)<br>θ が 360° 進むと、浜では ${v.L} m 進む(1周期 = 波長)`;
+    cols="wave";
+  }
+  let len=0;for(const[a,b]of segs)len+=Math.hypot(pts[a].x-pts[b].x,pts[a].y-pts[b].y);
+  if(extra==="radian")len=v.R*7+v.R*6;
+  return{pts,segs,formula,circle,cols,len,extra};
+}
+
+const cv=document.getElementById("cv"),ctx=cv.getContext("2d");
+let view={s:1,cx:0,cy:0};
+function css(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
+function draw(){
+  const g=build(), dpr=Math.min(window.devicePixelRatio||1,2), W=cv.clientWidth||600;
+  cv.width=Math.round(W*dpr);cv.height=Math.round(W*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);
+  let xs=g.pts.map(p=>p.x).concat([0]),ys=g.pts.map(p=>p.y).concat([0]);
+  if(g.circle){xs.push(g.circle,-g.circle);ys.push(g.circle,-g.circle);}
+  const minx=Math.min(...xs),maxx=Math.max(...xs),miny=Math.min(...ys),maxy=Math.max(...ys);
+  const span=Math.max(maxx-minx,maxy-miny,2)+2; view={s:W/span,cx:(minx+maxx)/2,cy:(miny+maxy)/2,W};
+  const X=x=>W/2+(x-view.cx)*view.s, Y=y=>W/2-(y-view.cy)*view.s;
+  ctx.clearRect(0,0,W,W);
+  // photo
+  if(photo&&tab==="photo"){
+    ctx.save();ctx.globalAlpha=ph.op/100;ctx.translate(X(ph.dx),Y(ph.dy));ctx.rotate(ph.rot*D);
+    const pw=ph.w*view.s,phh=pw*photo.height/photo.width;ctx.drawImage(photo,-pw/2,-phh/2,pw,phh);ctx.restore();
+  }
+  // grid
+  ctx.strokeStyle=css("--grid");ctx.lineWidth=1;
+  for(let x=Math.floor(view.cx-span/2);x<=view.cx+span/2;x++){ctx.beginPath();ctx.moveTo(X(x),0);ctx.lineTo(X(x),W);ctx.stroke();}
+  for(let y=Math.floor(view.cy-span/2);y<=view.cy+span/2;y++){ctx.beginPath();ctx.moveTo(0,Y(y));ctx.lineTo(W,Y(y));ctx.stroke();}
+  // axes labels
+  ctx.fillStyle=css("--muted");ctx.font=`12px ${css("--body")}`;ctx.fillText("↑ 陸",8,16);ctx.fillText("↓ 海",8,W-8);ctx.fillText("x:海に沿って →",W-100,W-8);
+  // circle & radials
+  const rope=css("--rope"),ink=css("--stake"),sea=css("--sea");
+  if(g.circle){ctx.strokeStyle=css("--line");ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(X(0),Y(0),g.circle*view.s,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle=rope;ctx.lineWidth=2.5;
+    for(const p of g.pts){ctx.beginPath();ctx.moveTo(X(0),Y(0));ctx.lineTo(X(p.x),Y(p.y));ctx.stroke();}
+    ctx.beginPath();ctx.arc(X(0),Y(0),g.circle*view.s,0,-6,true);ctx.stroke();}
+  ctx.strokeStyle=rope;ctx.lineWidth=2.5;ctx.lineJoin="round";
+  for(const[a,b]of g.segs){ctx.beginPath();ctx.moveTo(X(g.pts[a].x),Y(g.pts[a].y));ctx.lineTo(X(g.pts[b].x),Y(g.pts[b].y));ctx.stroke();}
+  // stakes
+  const many=g.pts.length>40;
+  g.pts.forEach((p,i)=>{ctx.fillStyle=ink;ctx.beginPath();ctx.arc(X(p.x),Y(p.y),many?2.5:4,0,Math.PI*2);ctx.fill();
+    if(!many||i%2===0){ctx.font=`11px ${css("--mono")}`;ctx.fillText(i,X(p.x)+5,Y(p.y)-5);}});
+  ctx.fillStyle=sea;ctx.beginPath();ctx.arc(X(0),Y(0),6,0,Math.PI*2);ctx.fill();
+  // taps
+  if(taps.length){taps.forEach((t,i)=>{const p=g.pts[i];if(p){ctx.strokeStyle=sea;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(X(p.x),Y(p.y));ctx.lineTo(X(t.x),Y(t.y));ctx.stroke();}
+    ctx.strokeStyle=sea;ctx.lineWidth=2;ctx.beginPath();ctx.arc(X(t.x),Y(t.y),7,0,Math.PI*2);ctx.stroke();});}
+  document.getElementById("gridnote").textContent=`方眼は1m・描く広さ ${f(maxx-minx,1)}×${f(maxy-miny,1)} m`;
+  return g;
+}
+
+function render(){
+  const g=draw();
+  try{localStorage.setItem("sunae-current",JSON.stringify({shape:state.shape,v:state.v}));}catch(e){}
+  if(tab==="design"){
+    document.getElementById("formula").innerHTML=g.formula;
+    document.getElementById("stats").innerHTML=`<div><span>杭の数</span><strong>${g.pts.length+1} 本</strong></div><div><span>線の合計(およそ)</span><strong>${f(g.len,1)} m</strong></div><div><span>班の分担(4人)</span><strong>1人 ${Math.ceil((g.pts.length)/4)} 本</strong></div>`;
+  }
+  if(tab==="table")table(g);
+  if(tab==="photo")errors(g);
+  if(tab==="save")document.getElementById("code").value=code();
+}
+function cell(id,val){if(!hide||revealed.has(id))return `<td>${val}</td>`;return `<td class="q"><button data-r="${id}" aria-label="答えを見る">？</button></td>`;}
+function table(g){
+  let h;
+  if(g.cols==="wave"){h="<tr><th>番号</th><th>θ(度)</th><th>θ(rad)</th><th>x (m)</th><th>sinθ</th><th>y (m)</th></tr>";
+    g.pts.forEach((p,i)=>{h+=`<tr><td>${i}</td><td>${f(p.deg,0)}</td><td>${piFrac(p.deg)}</td><td>${f(p.x,1)}</td>${cell(i+"s",f(Math.sin(p.deg*D),3))}${cell(i+"y",f(p.y))}</tr>`;});}
+  else if(g.cols==="rad"){h="<tr><th>番号</th><th>θ(rad)</th><th>θ(度)</th><th>cosθ</th><th>sinθ</th><th>x (m)</th><th>y (m)</th></tr>";
+    g.pts.forEach((p,i)=>{h+=`<tr><td>${i}</td><td>${p.rad}</td>${cell(i+"d",f(p.deg,1))}${cell(i+"c",f(Math.cos(p.rad),3))}${cell(i+"s",f(Math.sin(p.rad),3))}${cell(i+"x",f(p.x))}${cell(i+"y",f(p.y))}</tr>`;});}
+  else{h="<tr><th>番号</th><th>θ(度)</th><th>θ(rad)</th><th>r (m)</th><th>cosθ</th><th>sinθ</th><th>x (m)</th><th>y (m)</th></tr>";
+    g.pts.forEach((p,i)=>{h+=`<tr><td>${i}</td><td>${f(p.deg,1)}</td><td>${piFrac(p.deg)}</td><td>${f(p.r)}</td>${cell(i+"c",f(Math.cos(p.deg*D),3))}${cell(i+"s",f(Math.sin(p.deg*D),3))}${cell(i+"x",f(p.x))}${cell(i+"y",f(p.y))}</tr>`;});}
+  const t=document.getElementById("tbl");t.innerHTML=h;
+}
+document.getElementById("tbl").addEventListener("click",e=>{const b=e.target.closest("button[data-r]");if(b){revealed.add(b.dataset.r);render();}});
+document.getElementById("hide").addEventListener("change",e=>{hide=e.target.checked;render();});
+
+function slider(parent,id,label,min,max,step,val,unit,on){
+  const d=document.createElement("div");d.className="ctl";
+  d.innerHTML=`<label for="${id}">${label}</label><input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}"><output for="${id}">${val}${unit}</output>`;
+  const inp=d.querySelector("input"),out=d.querySelector("output");
+  inp.addEventListener("input",()=>{const v=parseFloat(inp.value);out.textContent=v+unit;on(v);});
+  parent.appendChild(d);return d;
+}
+function controls(){
+  const sh=document.getElementById("shapes");sh.innerHTML="";
+  for(const k in SHAPES){const b=document.createElement("button");b.textContent=SHAPES[k].name;b.setAttribute("aria-pressed",k===state.shape);
+    b.onclick=()=>{state.shape=k;revealed.clear();taps=[];controls();render();};sh.appendChild(b);}
+  const c=document.getElementById("ctls");c.innerHTML="";const P=SHAPES[state.shape].p;
+  for(const p in P){const[,min,max,step,label,unit]=P[p];
+    slider(c,"c-"+state.shape+"-"+p,label,min,max,step,state.v[state.shape][p],unit,v=>{state.v[state.shape][p]=v;revealed.clear();render();});}
+}
+function photoControls(){
+  const c=document.getElementById("photoctls");c.innerHTML="";
+  slider(c,"ph-w","写真の幅",2,40,0.5,ph.w," m",v=>{ph.w=v;draw();});
+  slider(c,"ph-rot","回転",-180,180,1,ph.rot,"°",v=>{ph.rot=v;draw();});
+  slider(c,"ph-dx","左右",-15,15,0.1,ph.dx," m",v=>{ph.dx=v;draw();});
+  slider(c,"ph-dy","上下",-15,15,0.1,ph.dy," m",v=>{ph.dy=v;draw();});
+  slider(c,"ph-op","こさ",10,100,5,ph.op,"%",v=>{ph.op=v;draw();});
+}
+document.getElementById("file").addEventListener("change",e=>{const fl=e.target.files[0];if(!fl)return;const img=new Image();img.onload=()=>{photo=img;draw();};img.src=URL.createObjectURL(fl);});
+const tm=document.getElementById("tapmode");
+tm.onclick=()=>{tapping=!tapping;tm.textContent=tapping?"タップ中(押すと終了)":"杭をタップ";tm.classList.toggle("ghost",tapping);};
+document.getElementById("undo").onclick=()=>{taps.pop();render();};
+document.getElementById("cleartaps").onclick=()=>{taps=[];render();};
+cv.addEventListener("click",e=>{if(!(tab==="photo"&&tapping))return;const r=cv.getBoundingClientRect(),W=view.W;
+  const sx=(e.clientX-r.left)*W/r.width,sy=(e.clientY-r.top)*W/r.height;
+  taps.push({x:view.cx+(sx-W/2)/view.s,y:view.cy-(sy-W/2)/view.s});render();});
+function errors(g){
+  const el=document.getElementById("err");
+  if(!taps.length){el.innerHTML=photo?"写真をそろえたら、0番の杭からタップしてください。":"写真がなくても、設計図の上をタップして練習できます。";return;}
+  const ds=taps.slice(0,g.pts.length).map((t,i)=>Math.hypot(t.x-g.pts[i].x,t.y-g.pts[i].y));
+  const avg=ds.reduce((a,b)=>a+b,0)/ds.length, mx=Math.max(...ds), wi=ds.indexOf(mx);
+  el.innerHTML=`<span class="big">平均 ${Math.round(avg*100)} cm</span> のずれ(${ds.length}本)<br>いちばんずれたのは ${wi}番の杭:${Math.round(mx*100)} cm。計算ミス?巻尺の向き?写真のゆがみ?班で理由を1つ考えて、設計か描き方を直してもう一度。`;
+}
+function code(){try{return btoa(unescape(encodeURIComponent(JSON.stringify({s:state.shape,v:state.v[state.shape]}))));}catch(e){return "";}}
+function listSaved(){let L=[];try{L=JSON.parse(localStorage.getItem("sunae-saved")||"[]");}catch(e){}
+  const box=document.getElementById("saved");box.innerHTML=L.length?"":'<p class="hint">まだ保存した作品はありません。</p>';
+  L.forEach((it,i)=>{const d=document.createElement("div");d.innerHTML=`<span>${it.name.replace(/[<>&]/g,"")}(${SHAPES[it.s]?.name||""})</span>`;
+    const o=document.createElement("button");o.className="btn ghost";o.textContent="開く";o.onclick=()=>{state.shape=it.s;state.v[it.s]=Object.assign({},it.v);controls();show("design");};
+    const x=document.createElement("button");x.className="btn ghost";x.textContent="消す";x.onclick=()=>{L.splice(i,1);try{localStorage.setItem("sunae-saved",JSON.stringify(L));}catch(e){}listSaved();};
+    d.append(o,x);box.appendChild(d);});return L;}
+document.getElementById("save").onclick=()=>{const L=listSaved();const n=document.getElementById("name").value.trim()||SHAPES[state.shape].name;
+  L.unshift({name:n,s:state.shape,v:Object.assign({},state.v[state.shape])});
+  try{localStorage.setItem("sunae-saved",JSON.stringify(L.slice(0,30)));document.getElementById("msg").textContent=`「${n}」を保存しました。`;}catch(e){document.getElementById("msg").textContent="この画面では保存できませんでした。共有コードを控えてください。";}listSaved();};
+document.getElementById("copy").onclick=()=>{const i=document.getElementById("code");navigator.clipboard?.writeText(i.value).then(()=>{document.getElementById("msg").textContent="コピーしました。";},()=>{i.select();document.getElementById("msg").textContent="選択しました。長押しでコピーしてください。";});};
+document.getElementById("load").onclick=()=>{try{const o=JSON.parse(decodeURIComponent(escape(atob(document.getElementById("incode").value.trim()))));
+  if(!SHAPES[o.s])throw 0;state.shape=o.s;state.v[o.s]=Object.assign(state.v[o.s],o.v);controls();show("design");}catch(e){document.getElementById("msg").textContent="コードを読めませんでした。全部コピーできているか確かめてください。";}};
+
+const tabs={design:"t-design",table:"t-table",photo:"t-photo",save:"t-save"};
+function show(t){tab=t;for(const k in tabs){document.getElementById(tabs[k]).setAttribute("aria-selected",k===t);document.getElementById("p-"+k).hidden=k!==t;}
+  if(t==="photo")photoControls();if(t==="save")listSaved();render();}
+for(const k in tabs)document.getElementById(tabs[k]).onclick=()=>show(k);
+window.addEventListener("resize",()=>draw());
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",()=>draw());
+controls();render();
+})();
+</script>
+
+</body></html>

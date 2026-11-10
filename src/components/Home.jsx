@@ -31,6 +31,13 @@ export default function Home({ team, onOpen, onEditProfile }) {
       <div className="section-title">ART ― 波をデザイン</div>
       <div className="tool-list">
         <Tool t={{ key: 'art', icon: '🎨', name: '波のアート', desc: 'sin を重ねて海の模様をつくる・画像で保存' }} cls="art" onOpen={onOpen} />
+        <a className="tool art" href="./sand.html" style={{ textDecoration: 'none' }}>
+          <span className="icon">🏖</span>
+          <span>
+            <div className="name">浜の砂絵ラボ</div>
+            <div className="desc">x = r cosθ、y = r sinθ で杭の位置を計算して砂に描く</div>
+          </span>
+        </a>
       </div>
 
       <p className="note">電波がなくても使えます。記録はこのスマホの中に保存されます。</p>
