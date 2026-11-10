@@ -238,12 +238,19 @@ input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);bord
       <span>星の杭を7本打つと、となりの杭との角は何ラジアン？</span><button class="btn ghost" data-reveal="r4">答え</button>
       <span class="ans" id="r4" hidden>2π/7（360° ÷ 7 ≒ 51.4°）</span>
     </div>
-    <button class="btn" data-go="design">2 設計するへ進む →</button>
+    <div class="card">
+      <h3>次は、この円の上に星を描く</h3>
+      <p>いま描いた<b>円と中心の杭をそのまま使う</b>。星の杭は、この円周の上に、同じ角ずつ打っていく。</p>
+      <p>7本の星なら、となりの杭との角は 360° ÷ 7 ＝ <b>2π/7 ラジアン</b>。半径1本分（1ラジアン）よりも少し小さい角ずつ進む。</p>
+      <p class="hint">ラジアンの杭は、星の杭とまちがえないように目印をつけるか、数え終わったら抜いておこう。</p>
+    </div>
+    <button class="btn" data-go="design" data-sync="1">2 この円で星を設計する →</button>
   </section>
 
   <!-- 2 設計 -->
   <section class="panel" id="p-design">
     <h2>図形を選ぶ</h2>
+    <p class="hint" id="samecircle">1 で描いた円（半径 <b id="sameR"></b> m）と中心の杭をそのまま使う。星の「半径 R」は、その円と同じにしておこう。</p>
     <div class="shapes" id="shapes"></div>
     <div id="ctls" style="display:flex;flex-direction:column;gap:10px"></div>
     <div class="formula" id="formula"></div>
@@ -481,6 +488,7 @@ const tabs={intro:"t-intro",radian:"t-radian",design:"t-design",table:"t-table",
 function show(t){tab=t;for(const k in tabs){document.getElementById(tabs[k]).setAttribute("aria-selected",k===t);document.getElementById("p-"+k).hidden=k!==t;}
   document.getElementById("stage").hidden=(t==="intro");
   if(t==="radian"){state.shape="radian";controls();radianControls();}
+  if(t==="design"){document.getElementById("sameR").textContent=state.v.radian.R;}
   window.scrollTo(0,0);
   if(t==="photo")photoControls();if(t==="save")listSaved();render();}
 for(const k in tabs)document.getElementById(tabs[k]).onclick=()=>show(k);
@@ -492,7 +500,7 @@ function radianControls(){const c=document.getElementById("radctl");c.innerHTML=
   const out=v=>{document.getElementById("convout").innerHTML=`${v}° ＝ ${piFrac(v)} ラジアン ≒ ${f(v*D,2)} ラジアン<br>＝ 半径 ${f(v*D,2)} 本分の弧（R＝${state.v.radian.R}m なら弧の長さ ${f(state.v.radian.R*v*D,2)} m）`;};
   slider(cc,"conv-deg","角（度）",0,360,15,90,"°",out);out(90);}
 document.querySelectorAll("[data-reveal]").forEach(b=>b.addEventListener("click",()=>{const el=document.getElementById(b.dataset.reveal);el.hidden=!el.hidden;b.textContent=el.hidden?"答え":"かくす";}));
-document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.go)));
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.sync){state.shape="star";state.v.star.R=state.v.radian.R;controls();}show(b.dataset.go);}));
 const refl=document.getElementById("refl");
 try{refl.value=localStorage.getItem("sunae-refl")||"";}catch(e){}
 refl.addEventListener("input",()=>{try{localStorage.setItem("sunae-refl",refl.value);}catch(e){}});
