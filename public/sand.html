@@ -24,7 +24,20 @@ body{background:var(--sand);color:var(--ink);font-family:var(--body);font-size:1
 .wrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
 header h1{font-family:var(--display);font-weight:400;font-size:1.7rem;margin:0;letter-spacing:.02em;text-wrap:balance}
 header p{margin:2px 0 0;color:var(--muted);font-size:.9rem}
-.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.flow{display:grid;grid-template-columns:5.2em 1fr;gap:4px 10px;font-size:.9rem;margin:0}
+.flow dt{font-family:var(--mono);color:var(--muted);font-variant-numeric:tabular-nums}
+.flow dd{margin:0}
+.card{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px}
+.card h3{margin:0;font-size:.95rem}
+.card p{margin:0;font-size:.88rem}
+.q{border-left:3px solid var(--rope);padding:4px 10px;font-size:.92rem}
+.ans{font-family:var(--mono);color:var(--sea);font-weight:500}
+.quiz .ans{grid-column:1/-1;padding:0 0 6px 10px}
+.links{display:flex;flex-direction:column;gap:6px}
+.links a{color:var(--sea);font-size:.9rem}
+textarea{font:inherit;width:100%;min-height:90px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--sand);color:var(--ink)}
+.quiz{display:grid;grid-template-columns:1fr auto;gap:6px 10px;align-items:center;font-size:.92rem}
 .tabs button{font:inherit;font-size:.85rem;padding:8px 4px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;cursor:pointer;line-height:1.3}
 .tabs button b{display:block;font-family:var(--mono);font-weight:500;color:var(--muted);font-size:.72rem}
 .tabs button[aria-selected="true"]{background:var(--sea);border-color:var(--sea);color:var(--sand)}
@@ -75,13 +88,15 @@ input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);bord
   </header>
 
   <nav class="tabs" role="tablist">
-    <button role="tab" id="t-design" aria-selected="true"><b>1</b>設計する</button>
-    <button role="tab" id="t-table" aria-selected="false"><b>2</b>杭を計算</button>
-    <button role="tab" id="t-photo" aria-selected="false"><b>3</b>写真で比べる</button>
-    <button role="tab" id="t-save" aria-selected="false"><b>4</b>保存・共有</button>
+    <button role="tab" id="t-intro" aria-selected="true"><b>0</b>はじめに</button>
+    <button role="tab" id="t-radian" aria-selected="false"><b>1</b>ラジアン</button>
+    <button role="tab" id="t-design" aria-selected="false"><b>2</b>設計する</button>
+    <button role="tab" id="t-table" aria-selected="false"><b>3</b>杭を計算</button>
+    <button role="tab" id="t-photo" aria-selected="false"><b>4</b>写真で比べる</button>
+    <button role="tab" id="t-save" aria-selected="false"><b>5</b>保存・ふりかえり</button>
   </nav>
 
-  <div class="stage">
+  <div class="stage" id="stage">
     <canvas id="cv" width="800" height="800" aria-label="砂絵の設計図"></canvas>
     <div class="legend">
       <span><i style="background:var(--stake)"></i>杭(番号つき)</span>
@@ -91,7 +106,142 @@ input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);bord
     </div>
   </div>
 
-  <!-- 1 設計 -->
+  <!-- 0 はじめに -->
+  <section class="panel" id="p-intro">
+    <h2>砂浜に巨大な絵を描くアーティスト</h2>
+    <div class="card">
+      <h3>Jim Denevan（ジム・デネヴァン）</h3>
+      <p>アメリカ・カリフォルニア州生まれ（1961年）。サーフィンをしていて、浜辺を「何も描かれていない大きなキャンバス」だと感じたのがきっかけ。<b>棒やレーキ（熊手）だけでフリーハンドで</b>、砂浜に巨大な幾何学模様を描く。</p>
+    </div>
+    <div class="card">
+      <h3>作品の例</h3>
+      <p><b>砂浜の円の模様</b>：たくさんの円が重なった模様。数時間で潮に流されて消える。</p>
+      <p><b>ブラックロック砂漠（アメリカ・ネバダ州、2009年）</b>：直径約4.86kmの中に円が1,000個。7日間かけて制作。ギネス世界記録「砂で作られた最大の作品」。</p>
+      <p><b>バイカル湖（ロシア、2010年）</b>：凍った湖の上に描いた円の連なり。「世界最大の作品」と言われる。数か月で消えた。</p>
+    </div>
+    <div class="links">
+      <a href="https://jimdenevan.com" target="_blank" rel="noopener">▶ 作品の写真を見る（公式サイト）</a>
+      <a href="https://jimdenevan.com/exhibitions/13-black-rock-desert-nevada-2009/overview" target="_blank" rel="noopener">▶ ブラックロック砂漠の作品（公式サイト）</a>
+      <span class="hint">※写真は電波のある所で開いてください</span>
+    </div>
+    <p class="q">地上で描いている本人には、全体の形が見えているのかな？</p>
+    <p class="q">フリーハンドでは、きれいな円や星を巨大に描くのは難しい。どうすれば正確に描ける？</p>
+    <p class="hint">→ 今日は<b>数学</b>で描く。角度と半径から、杭を打つ位置を計算する。まずは角度の新しい測り方から。</p>
+    <h2>今日の流れ（70分）</h2>
+    <dl class="flow">
+      <dt>0–5分</dt><dd>はじめに（このページ）</dd>
+      <dt>5–20分</dt><dd>1 ラジアン：ロープで角を測る</dd>
+      <dt>20–30分</dt><dd>2 設計する・3 杭を計算</dd>
+      <dt>30–50分</dt><dd>浜に杭を打って描く</dd>
+      <dt>50–62分</dt><dd>4 高い所から撮って比べる</dd>
+      <dt>62–70分</dt><dd>5 ふりかえり・片付け</dd>
+    </dl>
+    <div class="card">
+      <h3>安全のやくそく</h3>
+      <p>波打ち際には近づきすぎない（スタッフの決めたラインより海側に行かない）。杭やロープで人をつまずかせない。片付けは杭の数を数えて全部回収。</p>
+    </div>
+    <button class="btn" data-go="radian">1 ラジアンへ進む →</button>
+  </section>
+
+  <!-- 1 ラジアン -->
+  <section class="panel" id="p-radian" hidden>
+    <h2>① これまでの角の測り方「度」</h2>
+    <div class="card">
+      <p>これまでは、1周を <b>360等分</b> した1つ分を「1°（度）」として角を測ってきた。これを <b>60分法</b> という（1° を60に分けて1分、1分を60に分けて1秒）。</p>
+      <p>でも「360」という数は、昔の人（古代バビロニア）が決めたもの。円そのものから決まった数ではない。</p>
+      <p class="q">円そのものを使って、角を測る方法はないかな？</p>
+    </div>
+
+    <h2>② やってみよう：ロープで測る（班で）</h2>
+    <ol class="steps">
+      <li>中心に杭を打ち、半径 R のロープ（例：3m）をピンと張って、ぐるっと<b>円</b>を描く</li>
+      <li>同じ長さのロープを、<b>円周に沿わせて</b>曲げながら置き、半径1本分ずつ杭を打っていく（上の図の 0 → 1 → 2 …）</li>
+      <li>1周するまでに、半径は何本ならんだ？ 予想してから数えよう</li>
+    </ol>
+    <div class="quiz">
+      <span>半径は何本ならんだ？</span><button class="btn ghost" data-reveal="r1">答え</button>
+      <span class="ans" id="r1" hidden>6本と少し。ちょうど 2π本（≒ 6.28本）</span>
+    </div>
+    <div class="card">
+      <h3>なぜ 2π本？</h3>
+      <p>中学で習った「円周 ＝ 2π × 半径」を思い出そう。円周の長さ 2πR を、半径 R で割ると</p>
+      <p class="ans">2πR ÷ R ＝ 2π（≒ 6.28）</p>
+      <p>だから、1周には半径が <b>2π本</b> ならぶ。6本ならべても 0.28本分（R が3mなら約0.85m）あまる。</p>
+    </div>
+
+    <h2>③ 1ラジアンとは</h2>
+    <div class="card">
+      <p><b>半径と同じ長さの弧</b>をとったときの中心角を <b>1ラジアン</b> という（上の図の 0番 と 1番 の間の角）。</p>
+      <p>1ラジアンは約 <b>57.3°</b>。正三角形の角（60°）より少し小さい。</p>
+      <p>角の大きさを「弧の長さが半径の何本分か」で表す方法を <b>弧度法</b> という。単位は「ラジアン」。</p>
+      <p class="ans">角（ラジアン）＝ 弧の長さ ÷ 半径</p>
+    </div>
+
+    <h2>④ 円の大きさを変えても同じ？</h2>
+    <div class="card">
+      <p>半径 3m の円でも 10m の円でも、1ラジアンの角は同じ大きさ。</p>
+      <p>円を2倍に大きくすると、弧の長さも半径も<b>どちらも2倍</b>になる。だから「弧 ÷ 半径」の値は変わらない。下のスライダーで R を変えて、図の角が変わらないことを確かめよう。</p>
+      <div id="radctl"></div>
+    </div>
+
+    <h2>⑤ 主な角を弧度法で表すと</h2>
+    <div class="card">
+      <p>1周は半径 2π本分 → <b>360° ＝ 2π</b>。その半分の半周は → <b>180° ＝ π</b>。</p>
+      <p>あとは <b>180° ＝ π</b> を何等分するかで考えればよい。</p>
+      <div class="tablewrap"><table>
+        <tr><th>度</th><td>30°</td><td>45°</td><td>60°</td><td>90°</td><td>120°</td><td>180°</td><td>270°</td><td>360°</td></tr>
+        <tr><th>ラジアン</th><td>π/6</td><td>π/4</td><td>π/3</td><td>π/2</td><td>2π/3</td><td>π</td><td>3π/2</td><td>2π</td></tr>
+        <tr><th>考え方</th><td>180°÷6</td><td>180°÷4</td><td>180°÷3</td><td>180°÷2</td><td>60°×2</td><td>半周</td><td>90°×3</td><td>1周</td></tr>
+      </table></div>
+    </div>
+
+    <h2>⑥ 換算のしかた</h2>
+    <div class="card">
+      <p><b>度 → ラジアン</b>：度に <b>π/180</b> をかける</p>
+      <p class="ans">例）120° ＝ 120 × π/180 ＝ 2π/3</p>
+      <p><b>ラジアン → 度</b>：π を <b>180°</b> に置きかえる（180/π をかける）</p>
+      <p class="ans">例）3π/4 ＝ 3 × 180° ÷ 4 ＝ 135°</p>
+    </div>
+    <div class="card">
+      <h3>動かして確かめよう</h3>
+      <div id="convctl"></div>
+      <p class="ans" id="convout"></p>
+    </div>
+
+    <h2>⑦ よくある勘違い</h2>
+    <div class="card">
+      <p>× 「180 ＝ 3.14」ではない。<br>○ 「180°」と「π ラジアン」は、<b>同じ角を別の単位で表したもの</b>（1m ＝ 100cm と同じ）。</p>
+      <p>π は円周率（3.14…）のまま。π ラジアン ≒ 3.14 × 57.3° ≒ 180° と確かめられる。</p>
+      <p>教科書では「ラジアン」という単位を<b>省略</b>して、「180° ＝ π」のように書くことが多い。</p>
+    </div>
+
+    <h2>⑧ 弧度法は何がうれしい？</h2>
+    <div class="card">
+      <p><b>弧の長さが簡単に出せる</b>。半径 r、中心角 θ（ラジアン）のおうぎ形の弧の長さは</p>
+      <p class="ans">弧の長さ ＝ r × θ</p>
+      <p>度で計算すると「2πr × 角/360」と毎回 360 で割る必要がある。</p>
+      <p>このあと学ぶ三角関数のグラフや、物理（回転・波）、プログラミング（C言語の sin() など）では、角はラジアンで扱うのが基本。</p>
+    </div>
+
+    <h2>⑨ 練習問題</h2>
+    <div class="quiz">
+      <span>90° ＝ ？</span><button class="btn ghost" data-reveal="r2">答え</button>
+      <span class="ans" id="r2" hidden>π/2（180° ＝ π の半分）</span>
+      <span>60° ＝ ？</span><button class="btn ghost" data-reveal="r3">答え</button>
+      <span class="ans" id="r3" hidden>π/3（180° を3等分）</span>
+      <span>150° ＝ ？</span><button class="btn ghost" data-reveal="r5">答え</button>
+      <span class="ans" id="r5" hidden>5π/6（150 × π/180）</span>
+      <span>π/4 ＝ 何度？</span><button class="btn ghost" data-reveal="r6">答え</button>
+      <span class="ans" id="r6" hidden>45°（180° ÷ 4）</span>
+      <span>半径 3m、中心角 π/3 の弧の長さは？</span><button class="btn ghost" data-reveal="r7">答え</button>
+      <span class="ans" id="r7" hidden>3 × π/3 ＝ π ≒ 3.14 m</span>
+      <span>星の杭を7本打つと、となりの杭との角は何ラジアン？</span><button class="btn ghost" data-reveal="r4">答え</button>
+      <span class="ans" id="r4" hidden>2π/7（360° ÷ 7 ≒ 51.4°）</span>
+    </div>
+    <button class="btn" data-go="design">2 設計するへ進む →</button>
+  </section>
+
+  <!-- 2 設計 -->
   <section class="panel" id="p-design">
     <h2>図形を選ぶ</h2>
     <div class="shapes" id="shapes"></div>
@@ -128,6 +278,15 @@ input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);bord
 
   <!-- 4 保存 -->
   <section class="panel" id="p-save" hidden>
+    <h2>ふりかえり</h2>
+    <p class="hint">気づき・発見・疑問をメモしよう（この端末に保存されます）。</p>
+    <textarea id="refl" placeholder="例：半径は6本と少しで1周した／計算どおりに杭を打っても線がずれた理由は…"></textarea>
+    <div class="card">
+      <h3>今日のまとめ</h3>
+      <p>1周 ＝ 2π、180° ＝ π（半径何本分かで角を測る＝ラジアン）</p>
+      <p>杭の位置は x ＝ R cosθ、y ＝ R sinθ</p>
+      <p>次回（11/13）は、ラジアンを使って三角関数の値を計算する。</p>
+    </div>
     <h2>保存・共有</h2>
     <div class="row"><input type="text" id="name" placeholder="作品の名前(例:3班 7つの星)"><button class="btn" id="save">この端末に保存</button></div>
     <div class="saved" id="saved"></div>
@@ -318,13 +477,27 @@ document.getElementById("copy").onclick=()=>{const i=document.getElementById("co
 document.getElementById("load").onclick=()=>{try{const o=JSON.parse(decodeURIComponent(escape(atob(document.getElementById("incode").value.trim()))));
   if(!SHAPES[o.s])throw 0;state.shape=o.s;state.v[o.s]=Object.assign(state.v[o.s],o.v);controls();show("design");}catch(e){document.getElementById("msg").textContent="コードを読めませんでした。全部コピーできているか確かめてください。";}};
 
-const tabs={design:"t-design",table:"t-table",photo:"t-photo",save:"t-save"};
+const tabs={intro:"t-intro",radian:"t-radian",design:"t-design",table:"t-table",photo:"t-photo",save:"t-save"};
 function show(t){tab=t;for(const k in tabs){document.getElementById(tabs[k]).setAttribute("aria-selected",k===t);document.getElementById("p-"+k).hidden=k!==t;}
+  document.getElementById("stage").hidden=(t==="intro");
+  if(t==="radian"){state.shape="radian";controls();radianControls();}
+  window.scrollTo(0,0);
   if(t==="photo")photoControls();if(t==="save")listSaved();render();}
 for(const k in tabs)document.getElementById(tabs[k]).onclick=()=>show(k);
 window.addEventListener("resize",()=>draw());
 matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",()=>draw());
-controls();render();
+function radianControls(){const c=document.getElementById("radctl");c.innerHTML="";
+  const P=SHAPES.radian.p.R;slider(c,"rad-R",P[4],P[1],P[2],P[3],state.v.radian.R,P[5],v=>{state.v.radian.R=v;render();});
+  const cc=document.getElementById("convctl");cc.innerHTML="";
+  const out=v=>{document.getElementById("convout").innerHTML=`${v}° ＝ ${piFrac(v)} ラジアン ≒ ${f(v*D,2)} ラジアン<br>＝ 半径 ${f(v*D,2)} 本分の弧（R＝${state.v.radian.R}m なら弧の長さ ${f(state.v.radian.R*v*D,2)} m）`;};
+  slider(cc,"conv-deg","角（度）",0,360,15,90,"°",out);out(90);}
+document.querySelectorAll("[data-reveal]").forEach(b=>b.addEventListener("click",()=>{const el=document.getElementById(b.dataset.reveal);el.hidden=!el.hidden;b.textContent=el.hidden?"答え":"かくす";}));
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>show(b.dataset.go)));
+const refl=document.getElementById("refl");
+try{refl.value=localStorage.getItem("sunae-refl")||"";}catch(e){}
+refl.addEventListener("input",()=>{try{localStorage.setItem("sunae-refl",refl.value);}catch(e){}});
+controls();show("intro");
+if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}
 })();
 </script>
 
