@@ -239,18 +239,18 @@ input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);bord
       <span class="ans" id="r4" hidden>2π/7（360° ÷ 7 ≒ 51.4°）</span>
     </div>
     <div class="card">
-      <h3>次は、この円の上に星を描く</h3>
-      <p>いま描いた<b>円と中心の杭をそのまま使う</b>。星の杭は、この円周の上に、同じ角ずつ打っていく。</p>
+      <h3>次は、この円を使って絵を描く</h3>
+      <p>いま描いた<b>円と中心の杭をそのまま使う</b>。星・正多角形・太陽・花・波の輪・オリジナルから選べる。杭は、この円周の上（または内側・外側）に、角度を決めて打っていく。</p>
       <p>7本の星なら、となりの杭との角は 360° ÷ 7 ＝ <b>2π/7 ラジアン</b>。半径1本分（1ラジアン）よりも少し小さい角ずつ進む。</p>
       <p class="hint">ラジアンの杭は、星の杭とまちがえないように目印をつけるか、数え終わったら抜いておこう。</p>
     </div>
-    <button class="btn" data-go="design" data-sync="1">2 この円で星を設計する →</button>
+    <button class="btn" data-go="design" data-sync="1">2 この円で絵を設計する →</button>
   </section>
 
   <!-- 2 設計 -->
   <section class="panel" id="p-design">
     <h2>図形を選ぶ</h2>
-    <p class="hint" id="samecircle">1 で描いた円（半径 <b id="sameR"></b> m）と中心の杭をそのまま使う。星の「半径 R」は、その円と同じにしておこう。</p>
+    <p class="hint" id="samecircle">1 で描いた円（半径 <b id="sameR"></b> m）と中心の杭をそのまま使う。円を使う図形（星・正多角形・太陽・花・波の輪・オリジナル）は、半径がその円にそろえてある。らせんと sin の波は、円を使わない挑戦用。</p>
     <div class="shapes" id="shapes"></div>
     <div id="ctls" style="display:flex;flex-direction:column;gap:10px"></div>
     <div class="formula" id="formula"></div>
@@ -315,16 +315,21 @@ function piFrac(deg){ // 度をπの分数で(きれいな時だけ)
   const top=(a===1?"":a===-1?"-":a)+"π"; return b===1?top:top+"/"+b;
 }
 const SHAPES={
-  star:{name:"星(n角形をk飛び)",p:{R:[4,1,10,0.5,"半径 R","m"],n:[7,3,16,1,"杭の数 n","本"],k:[3,1,7,1,"飛ばす数 k","つ"]}},
-  rose:{name:"花(バラ曲線)",p:{R:[4,1,10,0.5,"花の大きさ R","m"],k:[3,2,7,1,"花びら k","枚系"],s:[15,5,30,5,"角度のきざみ","°"]}},
+  star:{name:"星(n角形をk飛び)",circle:1,p:{R:[4,1,10,0.5,"半径 R","m"],n:[7,3,16,1,"杭の数 n","本"],k:[3,1,7,1,"飛ばす数 k","つ"]}},
+  rose:{name:"花(バラ曲線)",circle:1,p:{R:[4,1,10,0.5,"花の大きさ R","m"],k:[3,2,7,1,"花びら k","枚系"],s:[15,5,30,5,"角度のきざみ","°"]}},
   spiral:{name:"らせん",p:{a:[0.5,0,3,0.5,"最初の半径","m"],g:[1.5,0.5,4,0.5,"1周で広がる","m"],t:[3,1,5,0.5,"回る数","周"],s:[30,15,60,15,"角度のきざみ","°"]}},
+  polygon:{name:"正多角形",circle:1,p:{R:[4,1,10,0.5,"半径 R","m"],n:[6,3,12,1,"頂点の数 n","個"]}},
+  sun:{name:"太陽(放射線)",circle:1,p:{R:[4,1,10,0.5,"半径 R","m"],n:[12,4,24,1,"光の数 n","本"]}},
+  ring:{name:"波の輪",circle:1,p:{R:[4,1,10,0.5,"半径 R","m"],a:[0.8,0.2,2,0.1,"波の高さ a","m"],k:[6,2,12,1,"波の数 k","個"],s:[15,5,30,5,"角度のきざみ","°"]}},
+  custom:{name:"オリジナル",circle:1,p:{R:[4,1,10,0.5,"円の半径 R(目安)","m"]}},
   radian:{name:"1ラジアンの弧",p:{R:[4,1,10,0.5,"半径 R(=ロープ)","m"]}},
   wave:{name:"sin の波",p:{A:[2,0.5,4,0.5,"振幅 A","m"],L:[8,4,16,1,"波長 L","m"],c:[2,1,3,1,"波の数","個"],s:[30,15,45,15,"角度のきざみ","°"]}},
 };
 let state={shape:"star",v:{}}, tab="design", hide=true, revealed=new Set();
 let photo=null, ph={w:12,rot:0,dx:0,dy:0,op:60}, tapping=false, taps=[];
 for(const k in SHAPES){state.v[k]={};for(const p in SHAPES[k].p)state.v[k][p]=SHAPES[k].p[p][0];}
-try{const s=JSON.parse(localStorage.getItem("sunae-current")||"null");if(s&&SHAPES[s.shape])state=Object.assign(state,s);}catch(e){}
+try{const s=JSON.parse(localStorage.getItem("sunae-current")||"null");if(s&&SHAPES[s.shape]){const def=state.v;state=Object.assign(state,s);for(const k in def)state.v[k]=Object.assign({},def[k],state.v[k]||{});}}catch(e){}
+if(!state.v.custom.text)state.v.custom.text="0 4\n72 4\n144 4\n216 4\n288 4\n0 4";
 
 function build(){
   const v=state.v[state.shape]; let pts=[],segs=[],closed=false,formula="",extra=null,circle=null,cols;
@@ -352,6 +357,28 @@ function build(){
     circle=v.R;
     formula=`ロープ ${v.R} m を半径にして、円周にも ${v.R} m ずつ測っていく<br>1 rad = 180°÷π ≒ 57.3° ,  6 rad ≒ 343.8°<br>あと ${f(2*Math.PI-6,3)} rad(${f(v.R*(2*Math.PI-6))} m)で1周 → 1周 = 2π rad`;
     extra="radian"; cols="rad";
+  }else if(state.shape==="polygon"){
+    for(let i=0;i<v.n;i++){const d=i*360/v.n;pts.push({deg:d,r:v.R,x:v.R*Math.cos(d*D),y:v.R*Math.sin(d*D)});segs.push([i,(i+1)%v.n]);}
+    formula=`θ = 360°÷${v.n} × 番号（${piFrac(360/v.n)} ずつ）<br>x = ${v.R}·cosθ ,  y = ${v.R}·sinθ<br>1辺 = 2R·sin(180°÷${v.n}) = ${f(2*v.R*Math.sin(180/v.n*D))} m`;
+    cols="r";
+  }else if(state.shape==="sun"){
+    for(let i=0;i<v.n;i++){const d=i*360/v.n;pts.push({deg:d,r:v.R,x:v.R*Math.cos(d*D),y:v.R*Math.sin(d*D)});}
+    pts.push({deg:0,r:0,x:0,y:0});
+    for(let i=0;i<v.n;i++){segs.push([v.n,i]);segs.push([i,(i+1)%v.n]);}
+    formula=`光の杭：θ = 360°÷${v.n} × 番号（${piFrac(360/v.n)} ずつ）<br>x = ${v.R}·cosθ ,  y = ${v.R}·sinθ<br>中心の杭（最後の番号）から各杭へ線をのばし、杭どうしもつなぐ`;
+    cols="r";
+  }else if(state.shape==="ring"){
+    for(let d=0;d<360-1e-9;d+=v.s){const r=v.R+v.a*Math.sin(v.k*d*D);pts.push({deg:d,r,x:r*Math.cos(d*D),y:r*Math.sin(d*D)});}
+    for(let i=0;i<pts.length;i++)segs.push([i,(i+1)%pts.length]);
+    formula=`r = ${v.R} + ${v.a}·sin(${v.k}θ)  (θ は ${v.s}° きざみ)<br>x = r·cosθ ,  y = r·sinθ  ← 円の上で半径が sin で波打つ`;
+    cols="r";
+  }else if(state.shape==="custom"){
+    const lines=(v.text||"").split(/\n/).map(l=>l.trim()).filter(Boolean);
+    for(const l of lines){const m=l.split(/[\s,、]+/).map(Number);if(m.length>=2&&isFinite(m[0])&&isFinite(m[1])){const d=m[0],r=m[1];pts.push({deg:d,r,x:r*Math.cos(d*D),y:r*Math.sin(d*D)});}}
+    for(let i=0;i<pts.length-1;i++)segs.push([i,i+1]);
+    circle=v.R;
+    formula=`1行に「角度(度) 半径(m)」を書く → 書いた順に線でつなぐ<br>x = r·cosθ ,  y = r·sinθ  (360° をこえる角やマイナスの角も OK)`;
+    cols="r";
   }else{
     const total=v.c*360;
     for(let d=0;d<=total+1e-9;d+=v.s){const x=v.L*d/360-v.L*v.c/2;pts.push({deg:d,x,y:v.A*Math.sin(d*D)});}
@@ -390,9 +417,9 @@ function draw(){
   // circle & radials
   const rope=css("--rope"),ink=css("--stake"),sea=css("--sea");
   if(g.circle){ctx.strokeStyle=css("--line");ctx.setLineDash([4,4]);ctx.beginPath();ctx.arc(X(0),Y(0),g.circle*view.s,0,Math.PI*2);ctx.stroke();ctx.setLineDash([]);
-    ctx.strokeStyle=rope;ctx.lineWidth=2.5;
+    if(g.extra==="radian"){ctx.strokeStyle=rope;ctx.lineWidth=2.5;
     for(const p of g.pts){ctx.beginPath();ctx.moveTo(X(0),Y(0));ctx.lineTo(X(p.x),Y(p.y));ctx.stroke();}
-    ctx.beginPath();ctx.arc(X(0),Y(0),g.circle*view.s,0,-6,true);ctx.stroke();}
+    ctx.beginPath();ctx.arc(X(0),Y(0),g.circle*view.s,0,-6,true);ctx.stroke();}}
   ctx.strokeStyle=rope;ctx.lineWidth=2.5;ctx.lineJoin="round";
   for(const[a,b]of g.segs){ctx.beginPath();ctx.moveTo(X(g.pts[a].x),Y(g.pts[a].y));ctx.lineTo(X(g.pts[b].x),Y(g.pts[b].y));ctx.stroke();}
   // stakes
@@ -446,6 +473,11 @@ function controls(){
   const c=document.getElementById("ctls");c.innerHTML="";const P=SHAPES[state.shape].p;
   for(const p in P){const[,min,max,step,label,unit]=P[p];
     slider(c,"c-"+state.shape+"-"+p,label,min,max,step,state.v[state.shape][p],unit,v=>{state.v[state.shape][p]=v;revealed.clear();render();});}
+  if(state.shape==="custom"){const t=document.createElement("textarea");t.id="custom-text";t.value=state.v.custom.text;
+    t.setAttribute("aria-label","角度と半径のリスト");
+    t.addEventListener("input",()=>{state.v.custom.text=t.value;revealed.clear();render();});
+    const h=document.createElement("p");h.className="hint";h.innerHTML="例：<b>0 4</b> → 0°の方向に4mの所。同じ点にもどれば形が閉じる。半径を変えれば円の内側・外側にも打てる。";
+    c.append(h,t);}
 }
 function photoControls(){
   const c=document.getElementById("photoctls");c.innerHTML="";
@@ -500,7 +532,7 @@ function radianControls(){const c=document.getElementById("radctl");c.innerHTML=
   const out=v=>{document.getElementById("convout").innerHTML=`${v}° ＝ ${piFrac(v)} ラジアン ≒ ${f(v*D,2)} ラジアン<br>＝ 半径 ${f(v*D,2)} 本分の弧（R＝${state.v.radian.R}m なら弧の長さ ${f(state.v.radian.R*v*D,2)} m）`;};
   slider(cc,"conv-deg","角（度）",0,360,15,90,"°",out);out(90);}
 document.querySelectorAll("[data-reveal]").forEach(b=>b.addEventListener("click",()=>{const el=document.getElementById(b.dataset.reveal);el.hidden=!el.hidden;b.textContent=el.hidden?"答え":"かくす";}));
-document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.sync){state.shape="star";state.v.star.R=state.v.radian.R;controls();}show(b.dataset.go);}));
+document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.sync){for(const k in SHAPES)if(SHAPES[k].circle)state.v[k].R=state.v.radian.R;if(!SHAPES[state.shape].circle)state.shape="star";controls();}show(b.dataset.go);}));
 const refl=document.getElementById("refl");
 try{refl.value=localStorage.getItem("sunae-refl")||"";}catch(e){}
 refl.addEventListener("input",()=>{try{localStorage.setItem("sunae-refl",refl.value);}catch(e){}});

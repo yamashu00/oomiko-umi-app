@@ -1,5 +1,5 @@
 // 海岸で電波が切れても開けるように、一度開いたファイルを端末に保存しておく
-const CACHE = 'oomiko-umi-v3';
+const CACHE = 'oomiko-umi-v4';
 
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
