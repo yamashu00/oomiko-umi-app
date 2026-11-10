@@ -37,6 +37,11 @@ header p{margin:2px 0 0;color:var(--muted);font-size:.9rem}
 .links{display:flex;flex-direction:column;gap:6px}
 .links a{color:var(--sea);font-size:.9rem}
 textarea{font:inherit;width:100%;min-height:90px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--sand);color:var(--ink)}
+figure{margin:0;display:flex;flex-direction:column;gap:4px}
+figure img{width:100%;height:auto;border-radius:8px;display:block}
+figcaption{font-size:.8rem;color:var(--muted);line-height:1.5}
+figcaption a{color:var(--muted)}
+.notice{border:2px solid var(--rope);border-radius:8px;padding:10px 12px;font-size:.92rem}
 .quiz{display:grid;grid-template-columns:1fr auto;gap:6px 10px;align-items:center;font-size:.92rem}
 .tabs button{font:inherit;font-size:.85rem;padding:8px 4px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;cursor:pointer;line-height:1.3}
 .tabs button b{display:block;font-family:var(--mono);font-weight:500;color:var(--muted);font-size:.72rem}
@@ -119,14 +124,23 @@ input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);bord
       <p><b>ブラックロック砂漠（アメリカ・ネバダ州、2009年）</b>：直径約4.86kmの中に円が1,000個。7日間かけて制作。ギネス世界記録「砂で作られた最大の作品」。</p>
       <p><b>バイカル湖（ロシア、2010年）</b>：凍った湖の上に描いた円の連なり。「世界最大の作品」と言われる。数か月で消えた。</p>
     </div>
+    <figure>
+      <img src="img/denevan-d2.jpg" alt="夕焼けの砂漠に並ぶ、ライトアップされた砂のピラミッド" loading="lazy">
+      <figcaption>「Self Similar」（2023年、アラブ首長国連邦・アブダビ）：砂で作ったピラミッドが約1km²にわたって並ぶ作品。写真：Tms2007／<a href="https://commons.wikimedia.org/wiki/File:The_Sunset_behind_the_Pyramids.jpg" target="_blank" rel="noopener">Wikimedia Commons</a>（<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.ja" target="_blank" rel="noopener">CC BY-SA 4.0</a>）</figcaption>
+    </figure>
+    <figure>
+      <img src="img/denevan-d1.jpg" alt="夜、明かりに照らされた砂のピラミッドの間を人が歩いている" loading="lazy">
+      <figcaption>同じ作品を夜に見たところ。人と比べると大きさがわかる。写真：Tms2007／<a href="https://commons.wikimedia.org/wiki/File:Manar_Exhibition_in_Abu_Dhabi.jpg" target="_blank" rel="noopener">Wikimedia Commons</a>（<a href="https://creativecommons.org/licenses/by-sa/4.0/deed.ja" target="_blank" rel="noopener">CC BY-SA 4.0</a>）</figcaption>
+    </figure>
     <div class="links">
-      <a href="https://jimdenevan.com" target="_blank" rel="noopener">▶ 作品の写真を見る（公式サイト）</a>
+      <a href="https://jimdenevan.com" target="_blank" rel="noopener">▶ 砂浜の地上絵の写真を見る（公式サイト）</a>
       <a href="https://jimdenevan.com/exhibitions/13-black-rock-desert-nevada-2009/overview" target="_blank" rel="noopener">▶ ブラックロック砂漠の作品（公式サイト）</a>
       <span class="hint">※写真は電波のある所で開いてください</span>
     </div>
     <p class="q">地上で描いている本人には、全体の形が見えているのかな？</p>
     <p class="q">フリーハンドでは、きれいな円や星を巨大に描くのは難しい。どうすれば正確に描ける？</p>
     <p class="hint">→ 今日は<b>数学</b>で描く。角度と半径から、杭を打つ位置を計算する。まずは角度の新しい測り方から。</p>
+    <div class="notice"><b>杭やロープは用意していません。自分たちで工夫してください。</b><br>例：流木や棒を杭のかわりにする、石や貝を並べて目印にする、ひもやタオルをつなぐ、歩幅で長さを測る、棒で砂に線を引く など。</div>
     <h2>今日の流れ（70分）</h2>
     <dl class="flow">
       <dt>0–5分</dt><dd>はじめに（このページ）</dd>
@@ -138,7 +152,7 @@ input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);bord
     </dl>
     <div class="card">
       <h3>安全のやくそく</h3>
-      <p>波打ち際には近づきすぎない（スタッフの決めたラインより海側に行かない）。杭やロープで人をつまずかせない。片付けは杭の数を数えて全部回収。</p>
+      <p>波打ち際には近づきすぎない（スタッフの決めたラインより海側に行かない）。杭のかわりに使ったものやひもで、人をつまずかせない。片付けは杭の数を数えて全部回収。</p>
     </div>
     <button class="btn" data-go="radian">1 ラジアンへ進む →</button>
   </section>
@@ -153,6 +167,8 @@ input[type=text]{font:inherit;padding:6px 10px;border:1px solid var(--line);bord
     </div>
 
     <h2>② やってみよう：ロープで測る（班で）</h2>
+    <div class="notice"><b>杭やロープは用意していません。自分たちで工夫してください。</b><br>例：流木や棒を杭のかわりにする、石や貝を並べて目印にする、ひもやタオルをつなぐ、歩幅で長さを測る、棒で砂に線を引く など。</div>
+
     <ol class="steps">
       <li>中心に杭を打ち、半径 R のロープ（例：3m）をピンと張って、ぐるっと<b>円</b>を描く</li>
       <li>同じ長さのロープを、<b>円周に沿わせて</b>曲げながら置き、半径1本分ずつ杭を打っていく（上の図の 0 → 1 → 2 …）</li>
